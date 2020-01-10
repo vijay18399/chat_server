@@ -65,7 +65,8 @@ exports.loginUser = (req, res) => {
 };
 
 exports.Users = (req, res) => {
-    User.find({ }, (err, users) => {
+    x=req.params.id;
+    User.find({ email: { $ne: x } } , (err, users) => {
         if (users) {
             console.log(users);
             return res.status(201).json(users);

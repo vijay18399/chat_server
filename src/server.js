@@ -50,13 +50,11 @@ let io = require('socket.io')(server);
 io.on('connection', (socket) => {
  
   socket.on('disconnect', (name) =>{
-    console.log("user logout");
     io.emit('users-changed', {user: name, event: 'left'});   
   });
 
   socket.on('set-name', (name) => {
     socket.username = name;
-    console.log(name +"user logined");
     io.emit('users-changed', {user: name, event: 'joined'});    
   });
   
@@ -64,8 +62,8 @@ io.on('connection', (socket) => {
     var x = sentiment.analyze(message.message);
     message.score = x.score;
     message.spamcheck = spamcheck.detect(message.message);
+    message.createdAt = new Date()
     let newMessage = Message(message);
-    console.log("message")
     newMessage.save(function (err,data) {
       if (err) console.log(err);
       if(data) console.log(data);

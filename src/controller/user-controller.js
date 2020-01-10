@@ -16,21 +16,16 @@ exports.registerUser = (req, res) => {
 
     User.findOne({ email: req.body.email }, (err, user) => {
         if (err) {
-            console.log("while search");
-            console.log(err);
             return res.status(400).json({ 'msg': err });
         }
 
         if (user) {
-            console.log(user);
             return res.status(400).json({ 'msg': 'The username already exists' });
         }
 
         let newUser = User(req.body);
         newUser.save((err, user) => {
             if (err) {
-                console.log("while saving");
-                console.log(err);
                 return res.status(400).json({ 'msg': err });
             }
             return res.status(201).json(user);
@@ -65,10 +60,9 @@ exports.loginUser = (req, res) => {
 };
 
 exports.Users = (req, res) => {
-    x=req.params.id;
-    User.find({ email: { $ne: x } } , (err, users) => {
+    console.log(req.params.id);
+    User.find({ email: { $ne: req.params.id } } , (err, users) => {
         if (users) {
-            console.log(users);
             return res.status(201).json(users);
         }
     });
@@ -81,7 +75,7 @@ exports.Messages = (req, res) => {
  q1={"to" : { $eq:   to } };
  q2={"from" : { $eq:   to } };
    query = { $or:[q1,q2]      } 
-   console.log(query);
+
     Message.find(query, (err, messages) => {
         if (messages) {
             console.log(messages);

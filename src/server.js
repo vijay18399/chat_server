@@ -2,6 +2,9 @@ var express     = require('express');
 var bodyParser  = require('body-parser');
 var passport	= require('passport');
 var mongoose    = require('mongoose');
+var Sentiment = require("sentiment");
+var sentiment = new Sentiment();
+var spamcheck = require("spam-detection");
 var config      = require('./config/config');
 var Message = require('./models/message');
 var cors = require('cors')
@@ -58,6 +61,9 @@ io.on('connection', (socket) => {
   });
   
   socket.on('send-message', (message) => {
+    var x = sentiment.analyze(message.message);
+    message.score = x.score;
+    message.spamcheck = spamcheck.detect(message.message);
     let newMessage = Message(message);
     console.log("message")
     newMessage.save(function (err,data) {
